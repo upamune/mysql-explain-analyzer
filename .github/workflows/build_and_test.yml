@@ -6,11 +6,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v4
-      - name: Install dependencies
-        run: go get .
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        id: setup-go
+        with:
+          go-version-file: "go.mod"
+      - name: Download Go modules
+        shell: bash
+        if: ${{ steps.setup-go.outputs.cache-hit != 'true' }}
+        run: go mod download
       - name: Build
         run: make build
       - name: Test with the Go CLI
