@@ -155,6 +155,9 @@ func printAnythingElseComments(w io.Writer, output output.Result) {
 				descStyle.Render(fmt.Sprintf("`: %s", t.Comment)),
 		)
 	}
+	if c := output.Comment; c != "" {
+		fmt.Fprintln(w, descStyle.Render(c))
+	}
 }
 
 func strPtrToString(s *string) string {

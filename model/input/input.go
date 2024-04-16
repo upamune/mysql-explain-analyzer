@@ -16,8 +16,11 @@ type TotalCostInfo struct {
 }
 
 type OrderingOperation struct {
-	UsingFilesort     bool              `json:"using_filesort"`
-	DuplicatesRemoval DuplicatesRemoval `json:"duplicates_removal"`
+	UsingTemporaryTable bool              `json:"using_temporary_table"`
+	UsingFilesort       bool              `json:"using_filesort"`
+	DuplicatesRemoval   DuplicatesRemoval `json:"duplicates_removal"`
+	SortCostInfo        SortCostInfo      `json:"cost_info"`
+	NestedLoop          []NestedLoop      `json:"nested_loop"`
 }
 
 type DuplicatesRemoval struct {
@@ -28,6 +31,10 @@ type DuplicatesRemoval struct {
 
 type NestedLoop struct {
 	Table Table `json:"table"`
+}
+
+type SortCostInfo struct {
+	SortCost string `json:"sort_cost"`
 }
 
 type CostInfo struct {

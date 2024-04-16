@@ -19,6 +19,9 @@ func convert(input input.Explain) output.Result {
 	if nestedLoop := input.QueryBlock.OrderingOperation.DuplicatesRemoval.NestedLoop; len(nestedLoop) > 0 {
 		tables = append(tables, convertNestedLoopToTables(nestedLoop)...)
 	}
+	if nestedLoop := input.QueryBlock.OrderingOperation.NestedLoop; len(nestedLoop) > 0 {
+		tables = append(tables, convertNestedLoopToTables(nestedLoop)...)
+	}
 
 	return output.Result{
 		Tables: tables,
@@ -31,7 +34,19 @@ func convert(input input.Explain) output.Result {
 		HasAnyCommentsTables: godash.Filter(tables, func(t output.Table, _ int) bool {
 			return t.Comment != ""
 		}),
+		Comment: analyzeOrderingOperationComment(input.QueryBlock.OrderingOperation),
 	}
+}
+
+func analyzeOrderingOperationComment(orderingOperation input.OrderingOperation) string {
+	var builder strings.Builder
+	if orderingOperation.UsingTemporaryTable {
+		_, _ = builder.WriteString("ソートのために一時テーブルを使用しています。データが設定したメモリのバッファーサイズに収まらないため非常に遅くなります。")
+	}
+	if orderingOperation.UsingFilesort {
+		_, _ = builder.WriteString("ソートのためにファイルソートを使用しています。インデックスを用いてソートが行われていません。")
+	}
+	return builder.String()
 }
 
 func convertNestedLoopToTables(nestedLoops []input.NestedLoop) []output.Table {

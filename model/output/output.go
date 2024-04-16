@@ -6,6 +6,8 @@ type Result struct {
 	FullTableScanTables  []Table
 	FullIndexScanTables  []Table
 	HasAnyCommentsTables []Table
+
+	Comment string
 }
 
 type Table struct {

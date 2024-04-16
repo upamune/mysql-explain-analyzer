@@ -34,9 +34,10 @@ func (c *CLI) Run(args []string) error {
 		return fmt.Errorf("failed to decode JSON: %v", err)
 	}
 
+	res := convert(input)
 	if err := write(
 		c.Stdout,
-		convert(input),
+		res,
 	); err != nil {
 		return fmt.Errorf("failed to write output: %v", err)
 	}
