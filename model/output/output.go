@@ -7,7 +7,7 @@ type Result struct {
 	FullIndexScanTables  []Table
 	HasAnyCommentsTables []Table
 
-	Comment string
+	Comments []string
 }
 
 type Table struct {

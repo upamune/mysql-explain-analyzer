@@ -155,8 +155,8 @@ func printAnythingElseComments(w io.Writer, output output.Result) {
 				descStyle.Render(fmt.Sprintf("`: %s", t.Comment)),
 		)
 	}
-	if c := output.Comment; c != "" {
-		fmt.Fprintln(w, descStyle.Render(c))
+	for _, comment := range output.Comments {
+		fmt.Fprintln(w, descStyle.Render(fmt.Sprintf("- %s", comment)))
 	}
 }
 

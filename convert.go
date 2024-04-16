@@ -34,19 +34,19 @@ func convert(input input.Explain) output.Result {
 		HasAnyCommentsTables: godash.Filter(tables, func(t output.Table, _ int) bool {
 			return t.Comment != ""
 		}),
-		Comment: analyzeOrderingOperationComment(input.QueryBlock.OrderingOperation),
+		Comments: analyzeOrderingOperationComments(input.QueryBlock.OrderingOperation),
 	}
 }
 
-func analyzeOrderingOperationComment(orderingOperation input.OrderingOperation) string {
-	var builder strings.Builder
+func analyzeOrderingOperationComments(orderingOperation input.OrderingOperation) []string {
+	var comments []string
 	if orderingOperation.UsingTemporaryTable {
-		_, _ = builder.WriteString("ソートのために一時テーブルを使用しています。データが設定したメモリのバッファーサイズに収まらないため非常に遅くなります。")
+		comments = append(comments, "ソートのために一時テーブルを使用しています。データが設定したメモリのバッファーサイズに収まらないため非常に遅くなります。")
 	}
 	if orderingOperation.UsingFilesort {
-		_, _ = builder.WriteString("ソートのためにファイルソートを使用しています。インデックスを用いてソートが行われていません。")
+		comments = append(comments, "ソートのためにファイルソートを使用しています。インデックスを用いてソートが行われていません。")
 	}
-	return builder.String()
+	return comments
 }
 
 func convertNestedLoopToTables(nestedLoops []input.NestedLoop) []output.Table {
